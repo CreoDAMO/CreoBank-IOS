@@ -59,7 +59,7 @@ Please ensure that your code adheres to our coding conventions and includes appr
 
 ## License
 
-CreoBank is released under the [MIT License](https://opensource.org/licenses/Apache 2.0). See the [LICENSE](LICENSE) file for more details.
+CreoBank is released under the [Apache 2.0 License](https://opensource.org/licenses/Apache 2.0). See the [LICENSE](LICENSE) file for more details.
 
 ## Contact
 
