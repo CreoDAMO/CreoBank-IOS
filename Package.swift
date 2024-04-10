@@ -4,23 +4,31 @@ import PackageDescription
 let package = Package(
     name: "CreoBank",
     products: [
-        // Products define the executables and libraries a package produces, and make them visible to other packages.
+        // Products define the executables and libraries produced by a package.
         .library(
             name: "CreoBank",
-            targets: ["CreoBank"]),
+            targets: ["Backend", "Frontend"]),
     ],
     dependencies: [
         // Dependencies declare other packages that this package depends on.
         // .package(url: /* package url */, from: "1.0.0"),
     ],
     targets: [
-        // Targets are the basic building blocks of a package. A target can define a module or a test suite.
-        // Targets can depend on other targets in this package, and on products in packages this package depends on.
+        // Targets are the basic building blocks of a package.
         .target(
-            name: "CreoBank",
-            dependencies: []),
+            name: "Backend",
+            dependencies: [],
+            path: "Backend" // Path to the Backend target sources
+        ),
+        .target(
+            name: "Frontend",
+            dependencies: [],
+            path: "Frontend" // Path to the Frontend target sources
+        ),
         .testTarget(
             name: "CreoBankTests",
-            dependencies: ["CreoBank"]),
+            dependencies: ["Backend", "Frontend"],
+            path: "Tests" // Path to the Tests
+        ),
     ]
 )
