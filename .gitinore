@@ -1,0 +1,75 @@
+# Xcode
+.DS_Store
+*.xcuserstate
+project.xcworkspace
+xcuserdata
+DerivedData/
+*.pbxuser
+!default.pbxuser
+*.mode1v3
+!default.mode1v3
+*.mode2v3
+!default.mode2v3
+*.perspectivev3
+!default.perspectivev3
+*.xccheckout
+*.moved-aside
+*.xcscmblueprint
+*.hmap
+*.ipa
+*.xcuserstate
+
+# Swift Package Manager
+.build/
+Packages/
+Package.resolved
+*.xcodeproj
+!*.xcodeproj/project.xcworkspace/xcshareddata/
+!*.xcodeproj/project.xcworkspace/xcuserdata/
+!*.xcodeproj/xcshareddata/
+!*.xcodeproj/xcuserdata/
+
+# CocoaPods
+Pods/
+Podfile.lock
+
+# Carthage
+Carthage/Build
+
+# Fastlane
+fastlane/report.xml
+fastlane/Preview.html
+fastlane/screenshots
+fastlane/test_output
+
+# Build products
+*.o
+*.d
+*.dia
+*.tbd
+*.dSYM/
+*.app
+*.appex
+*.bundle
+*.dylib
+*.framework
+*.xcarchive
+
+# Various settings
+*.swp
+*.swo
+*~
+*.lock
+*.bak
+*.orig
+*.old
+*.out
+*.tmp
+
+# OS generated files
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
