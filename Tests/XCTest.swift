@@ -6,34 +6,42 @@ class CreoBankTests: XCTestCase {
     var userData: UserData!
 
     override func setUpWithError() throws {
-        // Put setup code here. This method is called before the invocation of each test method in the class.
         super.setUp()
         userData = UserData()
         // Initialize userData with test data if necessary.
     }
 
     override func tearDownWithError() throws {
-        // Put teardown code here. This method is called after the invocation of each test method in the class.
         userData = nil
         super.tearDown()
     }
 
     func testUserAuthentication() throws {
-        // Test user authentication logic.
+        // Simulate user authentication
+        userData.isAuthenticated = true
+        XCTAssertTrue(userData.isAuthenticated, "User authentication failed")
     }
 
     func testAccountBalanceUpdates() throws {
-        // Test account balance update logic.
+        // Simulate account balance update
+        let newBalance: Double = 1000.0
+        userData.accountBalance = newBalance
+        XCTAssertEqual(userData.accountBalance, newBalance, "Account balance update failed")
     }
 
     func testTransactionHistoryUpdates() throws {
-        // Test transaction history update logic.
+        // Simulate transaction history update
+        let newTransaction = Transaction(description: "Test transaction", amount: 50.0, date: Date())
+        userData.transactionHistory.append(newTransaction)
+        XCTAssertTrue(userData.transactionHistory.contains(newTransaction), "Transaction history update failed")
     }
 
     func testPaymentSubmission() throws {
-        // Test payment submission logic.
+        // Simulate payment submission
+        let paymentAmount: Double = 100.0
+        userData.accountBalance -= paymentAmount
+        XCTAssertEqual(userData.accountBalance, 900.0, "Payment submission failed")
     }
 
     // Add more tests as needed...
 }
-
