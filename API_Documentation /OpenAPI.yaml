@@ -1,0 +1,249 @@
+openapi: "3.0.0"
+info:
+  title: CreoBank API
+  version: 1.0.0
+  description: API documentation for CreoBank backend including Creo Quick Pay features
+  contact:
+    name: CreoBank Development Team
+    email: support@creobank.com
+  license:
+    name: Apache 2.0
+    url: https://www.apache.org/licenses/LICENSE-2.0.html
+
+tags:
+  - name: User Management
+    description: Endpoints related to user registration, authentication, and management
+  - name: Transactions
+    description: Endpoints for transaction processing and history retrieval
+  - name: Payments
+    description: Endpoints for managing payments through Creo Quick Pay
+
+servers:
+  - url: https://api.creobank.com/v1
+    description: Production server
+
+security:
+  - BearerAuth: []
+
+paths:
+  /register:
+    post:
+      tags: [User Management]
+      summary: Register a new user
+      operationId: registerUser
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NewUser'
+      responses:
+        '200':
+          description: User registered successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserResponse'
+        '400':
+          description: Bad request, invalid input
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /login:
+    post:
+      tags: [User Management]
+      summary: Authenticate a user and retrieve a token
+      operationId: loginUser
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginCredentials'
+      responses:
+        '200':
+          description: Authentication successful
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LoginResponse'
+        '401':
+          description: Authentication failed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /transactions:
+    get:
+      tags: [Transactions]
+      summary: Retrieve a user's transaction history
+      operationId: getTransactions
+      parameters:
+        - in: query
+          name: userId
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Transaction history retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Transaction'
+        '404':
+          description: User not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /payment:
+    post:
+      tags: [Payments]
+      summary: Process a payment transaction
+      operationId: processPayment
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PaymentDetails'
+      responses:
+        '200':
+          description: Payment processed successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaymentResponse'
+        '400':
+          description: Invalid payment details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+  schemas:
+    NewUser:
+      type: object
+      required:
+        - username
+        - password
+        - email
+      properties:
+        username:
+          type: string
+          minLength: 3
+          maxLength: 20
+          description: The username for the new user
+        password:
+          type: string
+          format: password
+          minLength: 8
+          description: The password for the new user
+        email:
+          type: string
+          format: email
+          description: The email address for the new user
+    UserResponse:
+      type: object
+      properties:
+        id:
+          type: string
+          description: The unique identifier for the registered user
+        message:
+          type: string
+          description: A message indicating the registration status
+    LoginCredentials:
+      type: object
+      required:
+        - username
+        - password
+      properties:
+        username:
+          type: string
+          description: The username of the user attempting to log in
+        password:
+          type: string
+          description: The password of the user attempting to log in
+    LoginResponse:
+      type: object
+      properties:
+        token:
+          type: string
+          description: The authentication token for the logged-in user
+    Transaction:
+      type: object
+      required:
+        - id
+        - amount
+        - date
+      properties:
+        id:
+          type: string
+          description: The unique identifier for the transaction
+        amount:
+          type: number
+          description: The amount of the transaction
+        date:
+          type: string
+          format: date-time
+          description: The date and time of the transaction
+    PaymentDetails:
+      type: object
+      required:
+        - recipientId
+        - amount
+      properties:
+        recipientId:
+          type: string
+          description: The ID of the payment recipient
+        amount:
+          type: number
+          description: The amount to be paid
+  responses:
+    Error:
+      type: object
+      required:
+        - code
+        - message
+      properties:
+        code:
+          type: integer
+          format: int32
+          description: The error code
+        message:
+          type: string
+          description: A message describing the error
