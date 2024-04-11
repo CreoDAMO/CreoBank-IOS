@@ -1,34 +1,60 @@
-// swift-tools-version:5.3
+// swift-tools-version:5.5
 import PackageDescription
 
 let package = Package(
     name: "CreoBank",
+    platforms: [
+        .iOS(.v14), // Minimum iOS version
+        .macOS(.v10_15), // Minimum macOS version
+    ],
     products: [
         // Products define the executables and libraries produced by a package.
         .library(
-            name: "CreoBank",
-            targets: ["Backend", "Frontend"]),
+            name: "CreoBankBackend",
+            targets: ["Backend"]),
+        .library(
+            name: "CreoBankFrontend",
+            targets: ["Frontend"]),
+        .library(
+            name: "CreoQuickPayServices",
+            targets: ["CreoQuickPayServices"]),
     ],
     dependencies: [
-        // Dependencies declare other packages that this package depends on.
-        // .package(url: /* package url */, from: "1.0.0"),
+        // List of package dependencies
+        .package(url: "https://github.com/vapor/vapor.git", from: "4.0.0"),
+        // Add other dependencies here...
     ],
     targets: [
-        // Targets are the basic building blocks of a package.
         .target(
             name: "Backend",
-            dependencies: [],
-            path: "Backend" // Path to the Backend target sources
+            dependencies: [
+                // Add dependencies specific to the backend target...
+            ],
+            path: "Backend"
         ),
         .target(
             name: "Frontend",
-            dependencies: [],
-            path: "Frontend" // Path to the Frontend target sources
+            dependencies: [
+                // Add dependencies specific to the frontend target...
+            ],
+            path: "Frontend"
+        ),
+        .target(
+            name: "CreoQuickPayServices",
+            dependencies: [
+                // Add dependencies specific to the services target...
+            ],
+            path: "Services"
         ),
         .testTarget(
             name: "CreoBankTests",
-            dependencies: ["Backend", "Frontend"],
-            path: "Tests" // Path to the Tests
+            dependencies: [
+                "Backend",
+                "Frontend",
+                "CreoQuickPayServices",
+                // Add other dependencies for testing if needed...
+            ],
+            path: "Tests"
         ),
     ]
 )
