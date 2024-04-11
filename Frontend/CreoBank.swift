@@ -1,5 +1,6 @@
 // UserData.swift
 import Combine
+import SwiftUI
 
 class UserData: ObservableObject {
     @Published var isAuthenticated: Bool = false
@@ -7,8 +8,6 @@ class UserData: ObservableObject {
     @Published var userEmail: String = ""
     @Published var accountBalance: Double = 0.0
     @Published var transactionHistory: [Transaction] = []
-    
-    // Implement methods to handle user authentication, data fetching, and updates...
 }
 
 // Transaction.swift
@@ -25,30 +24,57 @@ struct Transaction: Identifiable {
 import Foundation
 
 class AuthenticationService {
-    func signIn(username: String, password: String, completion: @escaping (Bool) -> Void) {
-        // Implement sign-in logic with the backend service
+    func signIn(username: String, password: String, completion: @escaping (Result<Bool, Error>) -> Void) {
+        // Sign-in logic...
     }
     
-    func signOut(completion: @escaping (Bool) -> Void) {
-        // Implement sign-out logic with the backend service
+    func signOut(completion: @escaping (Result<Bool, Error>) -> Void) {
+        // Sign-out logic...
     }
-    
-    // Add other authentication-related methods as needed...
 }
 
 // AccountService.swift
 import Foundation
 
 class AccountService {
-    func fetchAccountData(completion: @escaping (AccountData?) -> Void) {
-        // Implement account data fetching logic with the backend service
+    func fetchAccountData(completion: @escaping (Result<AccountData, Error>) -> Void) {
+        // Account data fetching logic...
     }
     
-    func submitPayment(recipient: String, amount: Double, completion: @escaping (Bool) -> Void) {
-        // Implement payment submission logic with the backend service
+    func submitPayment(recipient: String, amount: Double, completion: @escaping (Result<Bool, Error>) -> Void) {
+        // Payment submission logic...
+    }
+}
+
+// NetworkProvider.swift
+import Foundation
+
+protocol NetworkProvider {
+    func request(url: URL, completion: @escaping (Result<Data, Error>) -> Void)
+}
+
+// AlamofireNetworkProvider.swift
+import Alamofire
+
+class AlamofireNetworkProvider: NetworkProvider {
+    func request(url: URL, completion: @escaping (Result<Data, Error>) -> Void) {
+        // Alamofire request...
+    }
+}
+
+// NetworkManager.swift
+import Foundation
+
+class NetworkManager {
+    static let shared = NetworkManager(provider: AlamofireNetworkProvider())
+    
+    private let provider: NetworkProvider
+    
+    private init(provider: NetworkProvider) {
+        self.provider = provider
     }
     
-    // Add other account-related methods as needed...
+    // Networking methods for API requests...
 }
 
 // SignInView.swift
@@ -58,15 +84,26 @@ struct SignInView: View {
     @EnvironmentObject var userData: UserData
     @State private var username: String = ""
     @State private var password: String = ""
-    @State private var isSigningIn: Bool = false
-    @State private var signInError: String?
+    @State private var isLoading: Bool = false
+    @State private var errorMessage: String = ""
     
     var body: some View {
-        // Implement the sign-in view UI
+        // Sign-in view UI...
     }
     
     func signIn() {
-        // Call AuthenticationService to perform sign-in
+        isLoading = true
+        AuthenticationService().signIn(username: username, password: password) { result in
+            DispatchQueue.main.async {
+                isLoading = false
+                switch result {
+                    case .success(let isAuthenticated):
+                        userData.isAuthenticated = isAuthenticated
+                    case .failure(let error):
+                        errorMessage = error.localizedDescription
+                }
+            }
+        }
     }
 }
 
@@ -75,9 +112,26 @@ import SwiftUI
 
 struct AccountView: View {
     @EnvironmentObject var userData: UserData
+    @State private var isLoading: Bool = false
+    @State private var errorMessage: String = ""
     
     var body: some View {
-        // Implement the account view UI
+        // Account view UI...
+    }
+    
+    func fetchAccountData() {
+        isLoading = true
+        AccountService().fetchAccountData { result in
+            DispatchQueue.main.async {
+                isLoading = false
+                switch result {
+                    case .success(let accountData):
+                        // Update account data in userData
+                    case .failure(let error):
+                        errorMessage = error.localizedDescription
+                }
+            }
+        }
     }
 }
 
@@ -88,15 +142,26 @@ struct PaymentView: View {
     @EnvironmentObject var userData: UserData
     @State private var recipient: String = ""
     @State private var amount: String = ""
-    @State private var isSubmittingPayment: Bool = false
-    @State private var paymentError: String?
+    @State private var isLoading: Bool = false
+    @State private var errorMessage: String = ""
     
     var body: some View {
-        // Implement the payment view UI
+        // Payment view UI...
     }
     
     func submitPayment() {
-        // Call AccountService to perform payment submission
+        isLoading = true
+        AccountService().submitPayment(recipient: recipient, amount: Double(amount) ?? 0.0) { result in
+            DispatchQueue.main.async {
+                isLoading = false
+                switch result {
+                    case .success(let success):
+                        // Handle success
+                    case .failure(let error):
+                        errorMessage = error.localizedDescription
+                }
+            }
+        }
     }
 }
 
@@ -105,9 +170,16 @@ import SwiftUI
 
 struct TransactionListView: View {
     @EnvironmentObject var userData: UserData
+    @State private var isLoading: Bool = false
+    @State private var errorMessage: String = ""
     
     var body: some View {
-        // Implement the transaction list view UI
+        // Transaction list view UI...
+    }
+    
+    func fetchTransactionHistory() {
+        isLoading = true
+        // Fetch transaction history
     }
 }
 
@@ -116,9 +188,11 @@ import SwiftUI
 
 struct ProfileView: View {
     @EnvironmentObject var userData: UserData
+    @State private var isLoading: Bool = false
+    @State private var errorMessage: String = ""
     
     var body: some View {
-        // Implement the profile view UI
+        // Profile view UI...
     }
 }
 
@@ -131,6 +205,9 @@ struct AppEntryView: View {
     var body: some View {
         if userData.isAuthenticated {
             AccountView()
+                .onAppear {
+                    // Fetch initial data
+                }
         } else {
             SignInView()
         }
@@ -150,3 +227,5 @@ struct CreoBankApp: App {
         }
     }
 }
+
+// Implement additional models and views for the CreoQuickPay app...
