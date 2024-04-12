@@ -66,7 +66,3 @@ CreoBank is released under the [Apache 2.0 License](https://opensource.org/licen
 If you have any questions or suggestions, feel free to contact [Jacque Antoine DeGraff] at [jacquedegraff@creodamo.com].
 
 Happy coding!
-
----
-
-Please customize the sections and content as necessary for your CreoBank app. Let me know if you have any specific requirements or if there's anything else I can assist you with!
