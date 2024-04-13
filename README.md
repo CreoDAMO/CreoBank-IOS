@@ -1,4 +1,3 @@
-```markdown
 # CreoBank
 
 Welcome to the CreoBank repository! This repository contains the source code for the CreoBank app, an iOS and macOS banking application developed by [Jacque Antoine DeGraff](https://github.com/CreoDAMO/CreoBank).
