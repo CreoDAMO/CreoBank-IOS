@@ -6,52 +6,75 @@ let package = Package(
     platforms: [
         .iOS(.v14), // Minimum iOS version
         .macOS(.v10_15), // Minimum macOS version
+        .watchOS(.v7), // Minimum watchOS version
+        .tvOS(.v14), // Minimum tvOS version
+        .linux // Linux support
     ],
     products: [
         // Products define the executables and libraries produced by a package.
         .library(
-            name: "CreoBankBackend",
-            targets: ["Backend"]),
+            name: "CreoBankAuthentication",
+            targets: ["Authentication"]),
         .library(
-            name: "CreoBankFrontend",
-            targets: ["Frontend"]),
+            name: "CreoBankData",
+            targets: ["Data"]),
         .library(
-            name: "CreoQuickPayServices",
-            targets: ["CreoQuickPayServices"]),
+            name: "CreoBankAnalytics",
+            targets: ["Analytics"]),
+        .library(
+            name: "CreoBankUI",
+            targets: ["UI"]),
+        // Add more libraries for other functionalities...
     ],
     dependencies: [
         // List of package dependencies
-        .package(url: "https://github.com/vapor/vapor.git", from: "4.0.0"),
+        .package(url: "https://github.com/Alamofire/Alamofire.git", from: "5.4.0"),
+        .package(url: "https://github.com/realm/realm-cocoa.git", from: "10.10.0"),
+        .package(url: "https://github.com/CombineCommunity/CombineCocoa.git", from: "0.11.0"),
         // Add other dependencies here...
     ],
     targets: [
+        // Authentication
         .target(
-            name: "Backend",
+            name: "Authentication",
             dependencies: [
-                // Add dependencies specific to the backend target...
+                "CreoBankData",
+                .product(name: "Alamofire", package: "Alamofire")
             ],
-            path: "Backend"
+            path: "Authentication"
         ),
+        // Data
         .target(
-            name: "Frontend",
+            name: "Data",
             dependencies: [
-                // Add dependencies specific to the frontend target...
+                "CreoBankAnalytics",
+                "CreoBankUI",
+                .product(name: "RealmSwift", package: "realm-cocoa")
             ],
-            path: "Frontend"
+            path: "Data"
         ),
+        // Analytics
         .target(
-            name: "CreoQuickPayServices",
-            dependencies: [
-                // Add dependencies specific to the services target...
-            ],
-            path: "Services"
+            name: "Analytics",
+            dependencies: []
         ),
+        // UI
+        .target(
+            name: "UI",
+            dependencies: [
+                "CreoBankData",
+                .product(name: "CombineCocoa", package: "CombineCocoa")
+            ],
+            path: "UI"
+        ),
+        // Tests
         .testTarget(
             name: "CreoBankTests",
             dependencies: [
-                "Backend",
-                "Frontend",
-                "CreoQuickPayServices",
+                "Authentication",
+                "Data",
+                "Analytics",
+                "UI",
                 // Add other dependencies for testing if needed...
             ],
             path: "Tests"
