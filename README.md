@@ -69,11 +69,26 @@ The following environments are configured:
 
 We welcome contributions to improve CreoBank! To contribute, follow these steps:
 
-1. Fork the repository.
-2. Create a new branch for your feature or bug fix.
-3. Make your changes and commit them with descriptive messages.
-4. Push your branch to your forked repository.
-5. Open a pull request in this repository.
+
+1. Read through the project's README file to familiarize yourself with the goals of the project, its architecture and technologies used. This will help you understand where your contributions may help.
+
+2. Check the "Issues" tab to see what kinds of issues are currently being tracked - these may include bugs, enhancement requests or documentation updates. Look for any issues that interest you or that you have expertise in helping with. 
+
+3. If you don't see an issue that matches something you'd like to work on, feel free to open a new issue describing your proposed contribution. The project maintainers can then discuss and potentially work with you on the effort.
+
+4. Fork the CreoBank repository to your own GitHub account. This makes a copy of the code you can work on without affecting the original project. 
+
+5. Clone your forked repository to your local machine using git clone. This downloads a copy to work on locally.
+
+6. Create a new branch for your work using git checkout -b myfeature. Keep your changes isolate in branches so as not to disrupt the main code.
+
+7. Make and test your code changes. Write or update code/documentation as needed. 
+
+8. Commit and push your work often with descriptive, clear commit messages. This saves changes and allows maintainers to review easier if needed.
+
+9. When ready, open a pull request in the upstream CreoBank repository comparing your branch to their main branch. A maintainer will review and potentially merge your work. 
+
+10. Consider joining the project's community on GitHub to stay engaged and potentially help other contributors as well. Your contributions help make open source more collaborative!
 
 Please ensure that your code adheres to our coding conventions and includes appropriate unit tests.
 
