@@ -1,4 +1,4 @@
-name: CreoBank Continuous Integration And Continuous Deployment
+name: CreoBank CI/CD
 
 on:
   push:
@@ -25,7 +25,7 @@ jobs:
         run: npm run build
 
       - name: Run Unit Tests
-        run: npm test
+        run: npm run test:unit
 
       - name: Run Integration Tests
         run: npm run test:integration
@@ -40,13 +40,13 @@ jobs:
         run: npm audit
 
       - name: Container Security Scanning
-        run: docker scan creobank/creobank-app:latest
+        run: docker scan my-app:latest
 
       - name: Publish Test Results
         uses: actions/upload-artifact@v2
         with:
           name: test-results
-          path: Tests/XCTest.swift
+          path: test-results/
 
   deploy:
     runs-on: ubuntu-latest
@@ -57,14 +57,14 @@ jobs:
         uses: actions/download-artifact@v2
         with:
           name: test-results
-          path: Tests/XCTest.swift
+          path: test-results/
 
       - name: Deploy to Azure App Service
         uses: Azure/webapps-deploy@v2
         with:
           app-name: creobank-sdk
           publish-profile: ${{ secrets.AZURE_APP_SERVICE_PUBLISH_PROFILE }}
-          package: Backend/CreoBank.swift
+          package: build/
 
       - name: Publish Docker Container
         uses: azure/docker-login@v1
@@ -75,15 +75,14 @@ jobs:
 
       - name: Build and Push Docker Image
         run: |
-          docker build -t ${{ secrets.AZURE_CONTAINER_REGISTRY }}/creobank-app:latest .
-          docker push ${{ secrets.AZURE_CONTAINER_REGISTRY }}/creobank-app:latest
+          docker build -t ${{ secrets.AZURE_CONTAINER_REGISTRY }}/creobank-sdk:latest .
+          docker push ${{ secrets.AZURE_CONTAINER_REGISTRY }}/creobank-sdk:latest
 
       - name: Deploy Docker Container to Azure Container Instances
         uses: azure/aci-deploy@v1
         with:
           resource-group: creobank-rg
-          dns-name-label: creobank-app
-          image-name: ${{ secrets.AZURE_CONTAINER_REGISTRY }}/creobank-app:latest
+          dns-name-label: creobank-sdk
+          image-name: ${{ secrets.AZURE_CONTAINER_REGISTRY }}/creobank-sdk:latest
 
-  # ... other jobs like monitor, ui-testing, environment-as-code, github-sponsorships, sdk-documentation ...
-  
+  # Other jobs like monitor, ui-testing, environment-as-code, github-sponsorships, sdk-documentation...
