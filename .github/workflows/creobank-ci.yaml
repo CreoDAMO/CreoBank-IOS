@@ -1,0 +1,65 @@
+name: CreoBank Continuous Integration
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        platform: [iOS, macOS, watchOS, tvOS, linux]
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up Swift
+        uses: fwal/setup-swift@v1
+        with:
+          swift-version: '5.5'
+
+      - name: Install dependencies
+        run: swift package resolve
+
+      - name: Build
+        run: swift build
+
+      - name: Run tests
+        run: swift test
+
+      - name: Archive build products
+        if: matrix.platform == 'iOS' || matrix.platform == 'macOS'
+        uses: actions/upload-artifact@v2
+        with:
+          name: CreoBank-${{ matrix.platform }}-build
+          path: .build/${{ matrix.platform }}/
+
+  deploy:
+    runs-on: ubuntu-latest
+    needs: build-and-test
+    if: github.ref == 'refs/heads/main'
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up Swift
+        uses: fwal/setup-swift@v1
+        with:
+          swift-version: '5.5'
+
+      - name: Install dependencies
+        run: swift package resolve
+
+      - name: Build release
+        run: swift build --configuration release
+
+      - name: Deploy
+        run: |
+          # Add deployment commands here
+          
