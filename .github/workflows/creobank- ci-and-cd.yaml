@@ -232,6 +232,3 @@ jobs:
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           publish-dir: path/to/sdk/documentation
-```
-
-Can we fix this
