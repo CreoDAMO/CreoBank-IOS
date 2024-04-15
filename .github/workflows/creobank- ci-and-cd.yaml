@@ -34,7 +34,7 @@ jobs:
       - name: Publish coverage 
         uses: actions/upload-coverage@v3
         with:
-          file: **/coverage/*.lcov
+          file: /coverage/*.lcov
 
       - name: Publish artifacts
         uses: actions/upload-artifact@v3
