@@ -1,4 +1,4 @@
-name: CreoBank Continuos Integration And Continuous Deployment
+name: CreoBank Continuous Integration And Continuous Deployment
 
 on:
   push:
@@ -73,12 +73,17 @@ jobs:
           username: ${{ secrets.AZURE_CONTAINER_REGISTRY_USERNAME }}
           password: ${{ secrets.AZURE_CONTAINER_REGISTRY_PASSWORD }}
 
+      - name: Build and Push Docker Image
+        run: |
+          docker build -t ${{ secrets.AZURE_CONTAINER_REGISTRY }}/creobank-app:latest .
+          docker push ${{ secrets.AZURE_CONTAINER_REGISTRY }}/creobank-app:latest
+
       - name: Deploy Docker Container to Azure Container Instances
         uses: azure/aci-deploy@v1
         with:
           resource-group: creobank-rg
-          dns-name-label: creobank-sdk
-          image-name: ${{ secrets.AZURE_CONTAINER_REGISTRY }}/creobank-sdk:latest
+          dns-name-label: creobank-app
+          image-name: ${{ secrets.AZURE_CONTAINER_REGISTRY }}/creobank-app:latest
 
   monitor:
     runs-on: ubuntu-latest
@@ -178,12 +183,8 @@ jobs:
           # Publish SDKs to NuGet
 
       - name: Publish to Brew
-        run: |
+        run:
           # Publish SDKs to Brew
-
-      - name: Publish to Cargo
-        run: |
-          # Publish SDKs to Cargo
 
       - name: Publish to Cargo
         run: |
